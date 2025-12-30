@@ -1,0 +1,49 @@
+{
+  "manifest_version": 2,
+  "name": "cllama",
+  "version": "1.0.0",
+  "description": "__MSG_cllamaDescription__",
+  "permissions": ["storage", "tabs"],  
+  "homepage_url": "https://fxdq.net/cllama/en/index.html",
+
+  "background": {
+    "scripts": ["background.js"],
+    "type": "module",
+    "persistent": false
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"]
+    }
+  ],
+
+  "options_ui": {
+    "page": "option/options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "48": "logo/48.png",
+    "96": "logo/96.png"
+  },
+  "web_accessible_resources": [
+    "viewer/viewer.html",
+    "viewer/viewer.js",
+    "css/*",
+    "logo/*"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "cllama_android@fxdq.net",
+      "data_collection_permissions": {
+        "description": "This extension does not collect any personal user data. Anonymous, non-personal usage statistics are collected solely for the purpose of improving extension functionality and are not shared with any third parties.",
+        "allow_reporting": false,
+        "required": ["none"],
+        "optional": []
+      }
+    }
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "default_locale": "en"
+}

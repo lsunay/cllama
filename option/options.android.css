@@ -1,0 +1,98 @@
+/* Base styles - mostly inherited from desktop, with some adjustments */
+body {
+    padding: 0; /* Removed padding for full width on mobile */
+    display: block; /* Remove flex centering for a more natural top-down flow */
+}
+
+.card {
+    width: 100%; /* Full width */
+    height: auto; /* Auto height */
+    min-height: 100%; /* Ensure it takes at least the full screen height */
+    margin: 0;
+    border-radius: 0; /* No border radius for a full-screen feel */
+    box-shadow: none; /* No shadow */
+    border: none; /* No border */
+    padding: 0; /* Removed padding from card */
+    background-color: var(--bs-body-bg); /* Explicitly set background color */
+}
+
+.card-header {
+    background-color: #0d6efd; /* Restored background color */
+    color: white; /* Restored text color */
+    font-size: 1.25rem; /* Slightly smaller header font */
+    padding: 0.75rem 1rem;
+    border-radius: 0 !important; /* No border radius */
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+input, select {
+    padding: 0.85rem; /* Slightly larger padding for easier tapping */
+    font-size: 1rem; /* Ensure readable font size */
+}
+
+button.btn-primary, a.btn-primary {
+    width: 100%; /* Full width buttons */
+    font-size: 1rem; /* Larger font size */
+    font-weight: 500;
+}
+
+.opane{
+    padding: 1.5rem 1rem; /* More vertical padding */
+}
+
+/* Make tabs larger and more spaced out */
+.nav-tabs {
+    display: flex;
+    justify-content: space-around;
+}
+.nav-tabs .nav-link {
+    flex: 1; /* Make tabs share space equally */
+    padding: 1rem 0.5rem;
+    font-size: 0.9rem; /* Adjust font size for smaller tabs */
+    text-align: center;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+/* Specific adjustments for smaller elements */
+.bi {
+    width: 1em;
+    height: 1.5em;
+    vertical-align: -0.4em; /* Adjusted for better mobile alignment */
+    fill: currentcolor;
+}
+
+.form-check-label {
+    margin-left: 8px;
+}
+
+/* File upload styles */
+.file-input-label {
+    padding: 1rem;
+    display: block;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;    
+}
+
+.upload-icon {
+    font-size: 2.5rem;
+}
+
+/* Adjustments for btn-group compactness */
+.btn-group {
+    display: flex; /* Use flexbox for better control */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    overflow-x: auto; /* Enable horizontal scrolling if needed */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+.btn-group .btn {
+    flex-shrink: 0; /* Prevent buttons from shrinking too much */
+    padding: 0.5rem 0.3rem; /* Further reduced padding */
+    font-size: 0.7rem; /* Further reduced font size */
+    white-space: nowrap; /* Ensure text stays on one line */
+}

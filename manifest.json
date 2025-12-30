@@ -1,0 +1,46 @@
+{
+    "manifest_version": 3,
+    "name": "cllama",
+    "description": "__MSG_cllamaDescription__",  
+    "version": "2.0.1",
+    "action": {
+      "default_popup": "/popup/popup.html",
+      "default_title": "__MSG_browserActionTitle__",      
+      "default_icon": {
+        "48": "logo/48.png",
+        "96": "logo/96.png"
+      }
+    },
+    "options_ui": {
+      "page": "option/options.html",
+      "open_in_tab": true
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "run_at" : "document_end",
+        "js": ["content_script.js"]
+      }
+    ],
+    "default_locale" : "en",
+    "background": {
+      "service_worker": "background.js",
+      "type": "module"
+    },
+    "permissions": ["sidePanel", "activeTab", "storage", "contextMenus"],
+    "web_accessible_resources": [
+      {
+        "resources": [
+          "viewer/viewer.html",
+          "/css/android.css",
+          "/css/cllama.css",
+          "/css/github-markdown-dark.css"
+        ],
+        "matches": ["<all_urls>"]
+      }
+    ],
+    "icons": {
+      "48": "logo/48.png",
+      "96": "logo/96.png"
+    }
+  }

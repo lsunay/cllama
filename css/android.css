@@ -1,0 +1,250 @@
+/* style.css */
+:host {
+  all: initial;
+  --primary: #FF7139;
+  --bg: #ffffff;
+  --text: #1f2937;
+  --border: #e5e7eb;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Main container: fixed positioning, contains wrapper and menu */
+.fab-container {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 2147483647;
+  /* display: flex; aoto */
+  /* gap: 12px; aoto */
+  touch-action: none; 
+  user-select: none;
+  -webkit-user-select: none;
+  /* This container is fixed to the viewport. */
+  width: 50px;
+  height: 50px;
+}
+
+/* Relative positioned wrapper containing icon and close button */
+.fab-wrapper {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+/* Floating action button (orange background) */
+.fab {
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  background: #FF7139; /* Firefox Orange */
+  color: white;        /* White Icon */
+  border: 2px solid white; /* White border to pop */
+  box-shadow: 0 4px 15px rgba(255, 113, 57, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Springy animation */
+}
+
+/* Rotation animation when menu is open */
+.fab-container.menu-open .fab {
+  transform: rotate(90deg);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.fab svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+
+/* Small red dot button to close plugin */
+.close-plugin-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  background: #ef4444; /* Red */
+  color: white;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20; /* Must be higher than .fab */
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none; /* Not clickable by default */
+}
+
+/* Show close button when menu is open */
+.fab-container.menu-open .close-plugin-btn {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* Menu items container */
+.menu {
+  position: absolute;
+  top: 50%; /* Vertically center */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  
+  /* Default position: to the left of the FAB */
+  right: 100%;
+  margin-right: 12px;
+  transform: translate(20px, -50%); /* Start further out for animation */
+}
+
+/* When FAB is on the left, move menu to the right */
+.fab-container.menu-on-right .menu {
+  right: auto;
+  left: 100%;
+  margin-right: 0;
+  margin-left: 12px;
+  transform: translate(-20px, -50%); /* Adjust animation start position */
+}
+
+.menu.visible {
+  opacity: 1;
+  transform: translate(0, -50%); /* Final position */
+  pointer-events: auto;
+}
+
+
+/* -- Vertical Alignment Modifiers -- */
+/* When FAB is near the top, align menu to the top */
+.fab-container.menu-align-top .menu {
+  top: 0;
+  transform: translate(20px, 0);
+}
+.fab-container.menu-align-top.menu-on-right .menu {
+  transform: translate(-20px, 0);
+}
+.fab-container.menu-align-top .menu.visible {
+  transform: translate(0, 0);
+}
+
+/* When FAB is near the bottom, align menu to the bottom */
+.fab-container.menu-align-bottom .menu {
+  top: auto;
+  bottom: 0;
+  transform: translate(20px, 0);
+}
+.fab-container.menu-align-bottom.menu-on-right .menu {
+  transform: translate(-20px, 0);
+}
+.fab-container.menu-align-bottom .menu.visible {
+  transform: translate(0, 0);
+}
+
+/* Menu buttons */
+.menu-btn {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 5px;
+  gap: 2px;
+}
+.menu-btn:active { background: #f3f4f6; }
+
+/* Panel styles remain unchanged */
+.panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 350px;
+  max-width: 90vw;
+  height: 520px;
+  max-height: 68vh;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2147483647;
+  transition: all 0.2s ease-out;
+}
+.panel.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+.panel-header {
+  background: var(--primary);
+  color: white;
+  padding: 8px 15px; /* Reduced vertical padding */
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.panel-close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 23px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  width: 30px; 
+  height: 30px; 
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.panel-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+  user-select: text;
+  -webkit-user-select: text;
+}
