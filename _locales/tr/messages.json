@@ -249,5 +249,11 @@
     },
     "language": {
         "message": "Dil"
+    },
+    "selectedFile":{
+        "message": "Seçilen Dosya: "
+    },
+    "resend": {
+        "message": "Yeniden Gönder"
     }
 }

@@ -249,5 +249,11 @@
     },
     "language": {
         "message": "言語"
+    },
+    "selectedFile":{
+        "message": "選択したファイル: "
+    },
+    "resend": {
+        "message": "再送信"
     }
 }

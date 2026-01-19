@@ -249,5 +249,11 @@
     },
     "language": {
         "message": "언어"
+    },
+    "selectedFile":{
+        "message": "선택한 파일: "
+    },
+    "resend": {
+        "message": "재전송"
     }
 }

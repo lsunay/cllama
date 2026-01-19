@@ -249,5 +249,11 @@
     },
     "language": {
         "message": "ภาษา"
+    },
+    "selectedFile":{
+        "message": "ไฟล์ที่เลือก: "
+    },
+    "resend": {
+        "message": "ส่งใหม่"
     }
 }

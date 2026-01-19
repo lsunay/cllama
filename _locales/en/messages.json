@@ -252,5 +252,8 @@
     },
     "selectedFile":{
         "message": "Selected File: "
+    },
+    "resend": {
+        "message": "Resend"
     }
 }

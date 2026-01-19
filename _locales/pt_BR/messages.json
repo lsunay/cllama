@@ -249,5 +249,11 @@
     },
     "language": {
         "message": "Idioma"
+    },
+    "selectedFile":{
+        "message": "Arquivo selecionado: "
+    },
+    "resend": {
+        "message": "Reenviar"
     }
 }

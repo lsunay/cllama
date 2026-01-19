@@ -249,5 +249,11 @@
     },
     "language": {
         "message": "Язык"
+    },
+    "selectedFile":{
+        "message": "Выбранный файл: "
+    },
+    "resend": {
+        "message": "Отправить повторно"
     }
 }

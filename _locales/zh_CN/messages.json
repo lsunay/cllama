@@ -253,5 +253,8 @@
     },
     "selectedFile":{
         "message": "已选择文件: "
+    },
+    "resend": {
+        "message": "重新发送"
     }
 }

@@ -249,5 +249,11 @@
     },
     "language": {
         "message": "Ngôn ngữ"
+    },
+    "selectedFile":{
+        "message": "Tệp đã chọn: "
+    },
+    "resend": {
+        "message": "Gửi lại"
     }
 }

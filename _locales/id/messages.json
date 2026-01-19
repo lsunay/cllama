@@ -249,5 +249,11 @@
     },
     "language": {
         "message": "Bahasa"
+    },
+    "selectedFile":{
+        "message": "File terpilih: "
+    },
+    "resend": {
+        "message": "Kirim ulang"
     }
 }

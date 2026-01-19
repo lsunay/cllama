@@ -42,6 +42,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /**
+     * Update resend button visibility for the last user message
+     */
+    function updateResendButtonVisibility() {
+        const messageElements = messagesContainer.querySelectorAll('.user-message');
+        messageElements.forEach(el => {
+            const resendBtn = el.querySelector('.resend-message-btn');
+            if (resendBtn) resendBtn.style.display = 'none';
+        });
+
+        if (historyMessages.length > 0 && stopFlag) {
+            const lastMsg = historyMessages[historyMessages.length - 1];
+            if (lastMsg.role === 'user') {
+                const lastUserMsgEl = Array.from(messageElements).find(el => parseInt(el.dataset.timestamp, 10) === lastMsg.rtime);
+                if (lastUserMsgEl) {
+                    const resendBtn = lastUserMsgEl.querySelector('.resend-message-btn');
+                    if (resendBtn) resendBtn.style.display = 'inline-block';
+                }
+            }
+        }
+    }
+
+    /**
      * Send message: handle user input, add system prompts, call chat API
      */
     async function sendMessage() {
@@ -54,6 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         msgInput.value = '';
         appendMessage(messageContent, 'self', rtime);
         historyMessages.push({ role: "user", content: messageContent, rtime });
+        updateResendButtonVisibility();
 
         const assistantMsgBlock = appendMessage("", currModelName, rtime + 1, false);
         const assistantMsgDiv = assistantMsgBlock.querySelector(".message-text");
@@ -158,6 +181,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             stopFlag = true;
             responseId = null;
         }
+        updateResendButtonVisibility();
     }
 
     /**
@@ -192,6 +216,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ${fileInfo ? `<a href="#" class="activate-message-btn" data-flag="${flag}" style="margin-left: 5px;text-decoration: none;font-size: 10pt;" title="${browser.i18n.getMessage("activate")}">${fileInfo.send ? '☑' : '◻'}</a>` : ''}
                     <img src="/images/copy.svg" class="copy-message-btn" data-flag="${flag}" style="height:13px;" title="${browser.i18n.getMessage("copy")}" />
                     <img src="/images/clear.svg" class="delete-message-btn" data-flag="${flag}" style="height:13px;" title="${browser.i18n.getMessage("delete")}"/>
+                    ${isSelf ? `<span class="resend-message-btn" style="cursor:pointer;display:none;margin-left:5px;font-size:13px;" title="${browser.i18n.getMessage("resend")}">↺</span>` : ''}
                 </div>
                 <${divpre} class="message-text ${markdownSelf}">${msgText}</${divpre}>
             </div>
@@ -238,6 +263,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         const copyBtn = messageDiv.querySelector('.copy-message-btn');
         const deleteBtn = messageDiv.querySelector('.delete-message-btn');
         const activateBtn = messageDiv.querySelector('.activate-message-btn');
+        const resendBtn = messageDiv.querySelector('.resend-message-btn');
+
+        if (resendBtn) {
+            resendBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!stopFlag) return;
+                
+                const msgTimestamp = parseInt(messageDiv.dataset.timestamp, 10);
+                const messageRecord = historyMessages.find(record => record.rtime === msgTimestamp);
+                if (messageRecord) {
+                    msgInput.value = messageRecord.content;
+                    historyMessages = historyMessages.filter(msg => msg.rtime !== msgTimestamp);
+                    messageDiv.remove();
+                    sendMessage();
+                }
+            });
+        }
 
         copyBtn.addEventListener('click', async (e) => {
             if (copyBtn.getAttribute("data-flag") === "false") return;
@@ -272,6 +314,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 historyMessages = historyMessages.filter(msg => msg.rtime !== msgTimestamp);
                 saveCurrentSession();
                 messageDiv.remove();
+                updateResendButtonVisibility();
             }
         });
 
@@ -525,6 +568,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 updateChatRecordsList(scenarioData.history, scenarioData.currentId);
                 checkAndShowSampleMessage(effectiveScenarioId, sessionId);
+                updateResendButtonVisibility();
             } else {
                 const fallbackSession = scenarioData.history.find(s => s.id === 0) || scenarioData.history[0];
                 if (fallbackSession) {
@@ -738,8 +782,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (topPIn && topPValueDisplay) {
                 topPIn.value = apiSettings.top_p;
-// Continuation from Part 1...
-
                 topPValueDisplay.textContent = parseFloat(topPIn.value).toFixed(1);
                 topPIn.addEventListener('input', () => 
                     topPValueDisplay.textContent = parseFloat(topPIn.value).toFixed(1)
@@ -864,6 +906,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         loadChatHistory(initialScenarioId, scenarioData.currentId);
         updateChatRecordsList(scenarioData.history, scenarioData.currentId);
+        updateResendButtonVisibility();
     });
 
     await initializeModelSelection();
@@ -916,4 +959,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     loadFishIconState();
-});                
+});
