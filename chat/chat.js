@@ -19,9 +19,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     const sendButton = document.getElementById("sendBtn");
     const cancelButton = document.getElementById("cancelBtn");
     const bFish = document.getElementById("b_fish");
+    const bCollapseAll = document.getElementById("b_collapseAll");
+    const bExpandAll = document.getElementById("b_expandAll");
     
     if (bFish) {
         bFish.title = browser.i18n.getMessage("fish_title");
+    }
+
+    if (bCollapseAll) {
+        bCollapseAll.addEventListener('click', (e) => {
+            e.preventDefault();
+            const messages = messagesContainer.querySelectorAll('.message');
+            messages.forEach(msg => msg.classList.add('collapsed-message'));
+        });
+    }
+
+    if (bExpandAll) {
+        bExpandAll.addEventListener('click', (e) => {
+            e.preventDefault();
+            const messages = messagesContainer.querySelectorAll('.message');
+            messages.forEach(msg => msg.classList.remove('collapsed-message'));
+        });
     }
     
     const ccId = getQueryParam("id");
@@ -61,6 +79,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
         }
+    }
+
+    function updateCollapseExpandButtonsState() {
+        const messageElements = messagesContainer.querySelectorAll('.message');
+        const count = messageElements.length;
+        const isDisabled = count < 2;
+        
+        [bCollapseAll, bExpandAll].forEach(btn => {
+            if (btn) {
+                if (isDisabled) {
+                    btn.style.opacity = '0.5';
+                    btn.style.pointerEvents = 'none';
+                } else {
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                }
+            }
+        });
     }
 
     /**
@@ -193,6 +229,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return div.innerHTML;
     }
 
+
     function appendMessage(messageText, sender, timestamp, flag = true, fileInfo = null) {
         const isSelf = sender === "self";
         const senderName = isSelf ? "" : sender;
@@ -228,8 +265,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             </div>
         `;
 
+        const msgTextEl = messageDiv.querySelector('.message-text');
+        msgTextEl.addEventListener('click', (e) => {
+            if (messageDiv.classList.contains('collapsed-message')) {
+                e.stopPropagation();
+                messageDiv.classList.remove('collapsed-message');
+            }
+        });
+
         attachMessageEventListeners(messageDiv, fileInfo);
         messagesContainer.appendChild(messageDiv);
+        updateCollapseExpandButtonsState();
 
         if (!stopScrollFlag) {
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -266,6 +312,16 @@ document.addEventListener("DOMContentLoaded", async () => {
      * Attach event listeners to message elements
      */
     function attachMessageEventListeners(messageDiv, fileInfo) {
+        const msgTextEl = messageDiv.querySelector('.message-text');
+        if (msgTextEl) {
+            msgTextEl.addEventListener('click', (e) => {
+                if (messageDiv.classList.contains('collapsed-message')) {
+                    e.stopPropagation();
+                    messageDiv.classList.remove('collapsed-message');
+                }
+            });
+        }
+
         const copyBtn = messageDiv.querySelector('.copy-message-btn');
         const deleteBtn = messageDiv.querySelector('.delete-message-btn');
         const activateBtn = messageDiv.querySelector('.activate-message-btn');
@@ -310,6 +366,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
+
         deleteBtn.addEventListener('click', async (e) => {
             if (deleteBtn.getAttribute("data-flag") === "false") return;
             e.stopPropagation();
@@ -321,6 +378,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 saveCurrentSession();
                 messageDiv.remove();
                 updateResendButtonVisibility();
+                updateCollapseExpandButtonsState();
             }
         });
 
@@ -531,7 +589,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             historyMessages = [];
             updateChatRecordsList(scenarioData.history, scenarioData.currentId);
             checkAndShowSampleMessage(currentScenario, scenarioData.currentId);
-        });
+
+             updateCollapseExpandButtonsState();
+        });       
     });
 
     async function loadChatHistory(scenarioId, sessionId) {
@@ -566,6 +626,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 copyToClipboard(messagesContainer);
                 thinkCollapseExpanded(messagesContainer);
+                updateCollapseExpandButtonsState();
 
                 if (scenarioData.currentId !== sessionId) {
                     scenarioData.currentId = sessionId;
