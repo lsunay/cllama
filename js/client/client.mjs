@@ -17,9 +17,12 @@ function createClient(config) {
     // Use "-" as a fallback if apiKey is missing, common for local or self-hosted services.
     const safeApiKey = apiKey || "-"; 
 
-    // 1. Check for OpenAI-compatible endpoints (often used by various providers)
-    if (endpoint && endpoint.endsWith("chat/completions")) {
-        return new ChatGPTClient({ 
+    if (service === "ollama") {
+        return new OllamaClient({ endpoint, defaultModel });
+    }
+
+    if (isGemini(config)) {
+        return new GeminiClient({ 
             service, 
             endpoint, 
             apiKey: safeApiKey, 
@@ -27,16 +30,14 @@ function createClient(config) {
         });
     }
 
-    // 2. Check for Ollama specific service
-    if (service === "ollama") {
-        return new OllamaClient({ endpoint, defaultModel });
-    }
-
-    // 3. Check for Gemini service using the utility function
-    if (isGemini(config)) {
-        return new GeminiClient({ 
+    if (endpoint) {
+        let ep_ = endpoint;
+        if(!endpoint.endsWith("chat/completions")){
+            ep_ = endpoint + (endpoint.endsWith("/")?"chat/completions":"/chat/completions");
+        }
+        return new ChatGPTClient({ 
             service, 
-            endpoint, 
+            endpoint: ep_, 
             apiKey: safeApiKey, 
             defaultModel 
         });

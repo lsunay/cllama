@@ -187,6 +187,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     /**
      * Append message to chat interface
      */
+    function escapeHTML(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function appendMessage(messageText, sender, timestamp, flag = true, fileInfo = null) {
         const isSelf = sender === "self";
         const senderName = isSelf ? "" : sender;
@@ -200,7 +206,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         let markdownSelf = isSelf ? "self-message" : "markdown-body";
         let divpre = isSelf ? "pre" : "div";
-        let msgText = messageText;
+        let msgText = isSelf ? escapeHTML(messageText) : messageText;
 
         if (fileInfo?.type) {
             divpre = "div";
